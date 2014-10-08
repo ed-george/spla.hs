@@ -50,8 +50,8 @@ hexStringToTuple xs = listToTuple $ map hexToInt (group 2 xs)
 
 
 rgbColorToHSVColor :: RGBColor -> HSVColor
-rgbColorToHSVColor (RGBColor (r,g,b)) | mx == mn  = HSVColor(0,0,truncate mx)
-									  | otherwise = HSVColor fin
+rgbColorToHSVColor (RGBColor (r,g,b))	| mx == mn  = HSVColor(0,0,truncate mx)
+										| otherwise = HSVColor fin
 								where
 										mR            = toFrac r
 										mG            = toFrac g
