@@ -26,8 +26,8 @@ hexToInt str = fst . head $ readHex str
 group :: Int -> [a] -> [[a]]
 group _ []    = []
 group n l
-  | n > 0     = (take n l) : (group n (drop n l))
-  | otherwise = group (abs n) l
+	| n > 0     = (take n l) : (group n (drop n l))
+	| otherwise = group (abs n) l
 
 listToTuple :: [a] -> (a, a, a)
 listToTuple [x,y,z] = (x,y,z)
@@ -36,20 +36,25 @@ listToTuple _       = error "Not enough params for listToTuple"
 mapTuple :: (a -> b) -> (a, a, a) -> (b, b, b)
 mapTuple f (a,b,c) = (f a,f b,f c)
 
+-- HexColor Conversion Functions
+
+hexColorToRGBColor :: String -> RGBColor
+hexColorToRGBColor (x:xs)
+	| validHexColor (x:xs) = RGBColor (hexStringToTuple xs)
+	| otherwise            = error "Invalid Color"
+
+hexColorToHSVColor :: String -> HSVColor
+hexColorToHSVColor xs
+	| validHexColor xs     = rgbColorToHSVColor $ hexColorToRGBColor xs
+	| otherwise            = error "Invalid Color"
+
+hexStringToTuple :: String -> (Int, Int, Int)
+hexStringToTuple xs = listToTuple $ map hexToInt (group 2 xs)
 
 -- RGBColor Conversion Functions
 
 rgbColorintToHexColor :: RGBColor -> String
 rgbColorintToHexColor (RGBColor (r, g, b)) = "#" ++ (intToHex r) ++ (intToHex g) ++ (intToHex b)
-
-hexColorToRGBColor :: String -> RGBColor
-hexColorToRGBColor (x:xs)
-	| validHexColor (x:xs) = RGBColor (hexStringToTuple xs)
-	| otherwise            = RGBColor(0,0,0)
-
-hexStringToTuple :: String -> (Int, Int, Int)
-hexStringToTuple xs = listToTuple $ map hexToInt (group 2 xs)
-
 
 rgbColorToHSVColor :: RGBColor -> HSVColor
 rgbColorToHSVColor (RGBColor (r,g,b))
