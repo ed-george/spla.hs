@@ -31,6 +31,10 @@ listToTuple :: [a] -> (a, a, a)
 listToTuple [x,y,z] = (x,y,z)
 listToTuple _       = error "Not enough params for listToTuple"
 
+mapTuple :: (a -> b) -> (a, a, a) -> (b, b, b)
+mapTuple f (a,b,c) = (f a,f b,f c)
+
+
 -- RGBColor Conversion Functions
 
 rgbColorintToHexColor :: RGBColor -> String
@@ -43,6 +47,29 @@ hexColorToRGBColor (x:xs)
 
 hexStringToTuple :: String -> (Int, Int, Int)
 hexStringToTuple xs = listToTuple $ map hexToInt (group 2 xs)
+
+
+rgbColorToHSVColor :: RGBColor -> HSVColor
+rgbColorToHSVColor (RGBColor (r,g,b)) | mx == mn  = HSVColor(0,0,truncate mx)
+                 					  | otherwise = HSVColor fin
+ 									where
+  										mR            = toFrac r
+  										mG            = toFrac g
+  										mB            = toFrac b
+  										toFrac x      = fromIntegral(x)/255
+  										mx            = maximum [mR,mG,mB]
+  										mn            = minimum [mR,mG,mB]
+  										d | mR == mn  = mG - mB
+  										  | mB == mn  = mR - mG
+  										  | otherwise = mB - mR
+  										h | mR == mn  = 3
+  										  | mB == mn  = 1
+  										  | otherwise = 5
+  										cmpH          = 60 * (h - d / (mx - mn))
+  										cmpS          = ((mx - mn)/mx) * 100
+  										cmpV          = mx * 100
+  										fin           = mapTuple truncate (cmpH,cmpS,cmpV) 
+
 
 --HSVColor Conversion Functions
 
